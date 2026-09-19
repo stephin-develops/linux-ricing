@@ -1,0 +1,93 @@
+animations {
+    window-open {
+        spring damping-ratio=0.5 stiffness=600 epsilon=0.0001
+        custom-shader r"
+        vec4 open_color(vec3 coords_geo, vec3 size_geo) {
+            float p = niri_clamped_progress;
+            float scale = mix(0.1, 1.0, p);
+            vec2 uv = coords_geo.xy;
+            vec2 centered = uv - 0.5;
+            float y_offset = mix(0.2, 0.0, p);
+            centered.y += y_offset;
+            centered /= scale;
+            vec2 tex_uv = centered + 0.5;
+            float out_of_bounds = step(0.0, tex_uv.x) * step(tex_uv.x, 1.0) * step(0.0, tex_uv.y) * step(tex_uv.y, 1.0);
+            vec3 coords_tex = niri_geo_to_tex * vec3(tex_uv, coords_geo.z);
+            vec4 oColor = texture2D(niri_tex, coords_tex.st) * out_of_bounds;
+            float min_dim = min(size_geo.x, size_geo.y);
+            vec2 target_box_size = size_geo.xy * 0.5;
+            vec2 ball_box_size = vec2(min_dim * 0.5);
+            vec2 current_box_size = mix(ball_box_size, target_box_size, p);
+            float ball_radius = min_dim * 0.5;
+            float current_radius = mix(ball_radius, 12.0, p);
+            vec2 pixel_pos = centered * size_geo.xy;
+            float radius = min(current_radius, min(current_box_size.x, current_box_size.y));
+            vec2 q = abs(pixel_pos) - current_box_size + vec2(radius);
+            float dist = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - radius;
+            float mask = 1.0 - smoothstep(-0.5, 0.5, dist);
+            float alpha = clamp(p * 5.0, 0.0, 1.0);
+            return oColor * mask * alpha;
+        }
+        "
+    }
+
+    window-close {
+        spring damping-ratio=0.5 stiffness=600 epsilon=0.0001
+        custom-shader r"
+        vec4 close_color(vec3 coords_geo, vec3 size_geo) {
+            float p = 1.0 - niri_clamped_progress;
+            float scale = mix(0.1, 1.0, p);
+            vec2 uv = coords_geo.xy;
+            vec2 centered = uv - 0.5;
+            float y_offset = mix(0.2, 0.0, p);
+            centered.y += y_offset;
+            centered /= scale;
+            vec2 tex_uv = centered + 0.5;
+            float out_of_bounds = step(0.0, tex_uv.x) * step(tex_uv.x, 1.0) * step(0.0, tex_uv.y) * step(tex_uv.y, 1.0);
+            vec3 coords_tex = niri_geo_to_tex * vec3(tex_uv, coords_geo.z);
+            vec4 oColor = texture2D(niri_tex, coords_tex.st) * out_of_bounds;
+            float min_dim = min(size_geo.x, size_geo.y);
+            vec2 target_box_size = size_geo.xy * 0.5;
+            vec2 ball_box_size = vec2(min_dim * 0.5);
+            vec2 current_box_size = mix(ball_box_size, target_box_size, p);
+            float ball_radius = min_dim * 0.5;
+            float current_radius = mix(ball_radius, 12.0, p);
+            vec2 pixel_pos = centered * size_geo.xy;
+            float radius = min(current_radius, min(current_box_size.x, current_box_size.y));
+            vec2 q = abs(pixel_pos) - current_box_size + vec2(radius);
+            float dist = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - radius;
+            float mask = 1.0 - smoothstep(-0.5, 0.5, dist);
+            float alpha = clamp(p * 5.0, 0.0, 1.0);
+            return oColor * mask * alpha;
+        }
+        "
+    }
+
+    window-movement {
+        spring damping-ratio=0.4 stiffness=400 epsilon=0.0001
+    }
+    window-resize {
+        spring damping-ratio=0.4 stiffness=400 epsilon=0.0001
+    }
+    horizontal-view-movement {
+        spring damping-ratio=0.5 stiffness=500 epsilon=0.0001
+    }
+    workspace-switch {
+        spring damping-ratio=0.5 stiffness=500 epsilon=0.0001
+    }
+    overview-open-close {
+        spring damping-ratio=0.5 stiffness=500 epsilon=0.0001
+    }
+    config-notification-open-close {
+        spring damping-ratio=0.7 stiffness=600 epsilon=0.0001
+    }
+    exit-confirmation-open-close {
+        spring damping-ratio=0.7 stiffness=600 epsilon=0.0001
+    }
+    screenshot-ui-open {
+        spring damping-ratio=0.7 stiffness=600 epsilon=0.0001
+    }
+    recent-windows-close {
+        spring damping-ratio=0.7 stiffness=600 epsilon=0.0001
+    }
+}
