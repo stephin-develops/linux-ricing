@@ -1,5 +1,31 @@
-window-decoration=false
-font-size = 10
+window-decoration = false
+gtk-titlebar = false
+confirm-close-surface = false
+
+window-padding-x = 20
+window-padding-y = 15
+window-padding-color = extend
+unfocused-split-opacity = 0.
+
+app-notifications = false
+theme = noctalia
 background-opacity = 0.4
-custom-shader = shaders/perfection.glsl
+custom-shader = shaders/cursor.glsl
 custom-shader-animation = always
+
+font-size = 10
+font-family = "JetbrainsMono Nerd Font"
+font-feature = calt
+font-feature = liga
+
+scrollback-limit = 5000
+scrollbar = never
+cursor-style = bar
+cursor-style-blink = true
+cursor-click-to-move = true
+
+window-save-state = never
+gtk-single-instance = true
+shell-integration = fish
+mouse-hide-while-typing = true
+copy-on-select = false
