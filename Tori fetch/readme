@@ -1,4 +1,4 @@
-create a "tori" folder and place this file and image in it
+create a "tori" folder and place python file and image in it
 
 Usage:   python3 torii-fetch.py            
          python3 torii-fetch.py --preview  (print the torii only, without image )
