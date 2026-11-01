@@ -1,0 +1,363 @@
+# ==============================================================
+#                    INCLUDES & GENERAL
+# ==============================================================
+
+[include.optional]
+files = [
+  "animation.toml",
+  "noctalia.toml",
+]
+
+[general]
+autostart = ["noctalia"]
+mod_key = "Super"
+xwayland = true
+xwayland_native_resolution = true
+xwayland_xsettings = true
+# nvidia_sync_workaround = true
+show_cheatsheet = false
+focus_on_activate = false
+honor_restored_maximize = false
+attach_modal_dialogs = true
+
+# ==============================================================
+#                   DUAL-GPU / DRM SETTINGS
+# ==============================================================
+
+#[drm]
+#ignored_devices = ["/dev/dri/renderD128"]
+
+# ==============================================================
+#                   ENVIRONMENT VARIABLES
+# ==============================================================
+
+[environment]
+QT_QPA_PLATFORM = "wayland"
+ELECTRON_OZONE_PLATFORM_HINT = "auto"
+QT_QPA_PLATFORMTHEME = "qt5ct"
+QT_QPA_PLATFORMTHEME_QT6 = "qt6ct"
+SDL_VIDEODRIVER = "wayland"
+QT_IM_MODULE = "fcitx"
+XMODIFIERS = "@im=fcitx"
+SDL_IM_MODULE = "fcitx"
+INPUT_METHOD = "fcitx"
+
+# ==============================================================
+#                           INPUT
+# ==============================================================
+
+[input]
+middle_click_paste = false
+client_window_drag = true
+window_drag_toggle = "none"
+mod_right_double_click = "none"
+
+[input.keyboard]
+# Numlock persistence is managed via xkb options or autostart if needed
+
+[input.touchpad]
+tap = true
+natural_scroll = true
+sensitivity = 0.5
+scroll_factor = 2.0
+disable_while_typing = true
+
+[input.mouse]
+natural_scroll = false
+left_handed = false
+#accel_profile = "flat"
+sensitivity = 0.0
+scroll_wheel_step = 60
+
+[input.focus]
+follows_mouse = true
+follows_mouse_max_scroll = 0.5
+
+[input.drag_edge_scroll]
+enabled = true
+
+# ==============================================================
+#                   OUTPUTS & LAPTOP EVENTS
+# ==============================================================
+
+[output.eDP-1]
+mode = "1920x1080@59.977"
+scale = 1.0
+transform = "normal"
+position = [0, 0]
+
+[events]
+lid_close = "umbriel msg output-disable eDP-1"
+lid_open = "umbriel msg output-enable eDP-1"
+
+# ==============================================================
+#                     LAYOUT & APPEARANCE
+# ==============================================================
+
+[layout]
+mode = "scrolling"
+gap = 8
+extent_presets = [0.33333, 0.5]
+client_maximize = "column"
+
+[layout.scrolling]
+default_extent_fraction = 0.5
+center_focused = "never"
+center_underfull_strip = true
+
+[layout.tabs]
+default_display = "normal"
+scroll_switches_tabs = true
+middle_click_closes = true
+
+[appearance]
+prefer_no_csd = true
+border_width = 0
+outer_border_width = 0
+corner_radius = 20
+opaque_fullscreen = true
+drag_opacity = 1.0
+
+[appearance.blur]
+enabled = true
+optimized = true
+
+[appearance.shadow]
+enabled = true
+softness = 50
+offset_x = 0
+offset_y = 8
+
+#[layout.struts]
+#top = 40
+
+[hot_corners.top_left]
+enabled = true
+delay_ms = 50
+action = "overview-open"
+
+[overview]
+zoom = 0.4
+scroll_factor_horizontal = 1.0
+scroll_factor_vertical = 1.0
+background_blur = true
+workspace_wallpaper = true
+shortcuts = true
+shortcut_keys = "1234567890"
+
+# ==============================================================
+#                        SCRATCHPADS
+# ==============================================================
+
+[[scratchpad]]
+name = "terminal"
+
+# ==============================================================
+#                        WINDOW RULES
+# ==============================================================
+
+# General blur fallback
+[[window_rule]]
+match.app_id = ".*"
+blur = true
+
+# Ghostty (matches xray = true)
+[[window_rule]]
+match.app_id = "^com\\.mitchellh\\.ghostty$"
+blur = true
+
+# Nautilus
+[[window_rule]]
+match.app_id = "org\\.gnome\\.Nautilus"
+opacity = 
+blur = true
+
+# Zed
+[[window_rule]]
+match.app_id = "zed"
+opacity = 
+default_maximize = true
+blur = true
+default_workspace = 2
+
+# Brave
+[[window_rule]]
+match.app_id = "brave"
+default_maximize = true
+
+# Drift
+[[window_rule]]
+match.app_id = "org\\.cutwire\\.Drift"
+default_fullscreen = true
+
+# Noctalia Settings
+[[window_rule]]
+match.app_id = "^dev\\.noctalia\\.Noctalia\\.Settings$"
+default_floating = true
+default_floating_size_px = { width = 1080, height = 920 }
+
+# Steam notification toasts
+[[window_rule]]
+match.app_id = "steam"
+confine_pointer = true
+match.title = "^notificationtoasts_\\d+_desktop$"
+default_floating = true
+default_focused = false
+
+# ==============================================================
+#                         KEYBINDINGS
+# ==============================================================
+
+[keybinds]
+# ------------------- Core Commands -------------------------
+"Mod+Shift+Slash" = "cheatsheet-toggle"
+"Mod+Shift+E"     = "session-quit"
+"Ctrl+Alt+Delete" = "session-quit"
+# "Mod+Shift+P"   = "dpms-off"
+"Mod+Escape"      = { action = "shortcuts-inhibit-toggle", allow_when_inhibited = true, repeat = false }
+
+# ------------------ Launcher & Apps ------------------------
+"Mod+T"     = { action = "spawn ghostty", repeat = false }
+"Mod+Space" = { action = "spawn noctalia msg panel-toggle launcher", repeat = false }
+"Mod+S"     = { action = "spawn noctalia msg panel-toggle control-center", repeat = false }
+
+# ---------------- Volume & Brightness ----------------------
+"XF86AudioRaiseVolume"  = { action = "spawn noctalia msg volume-up", allow_when_locked = true }
+"XF86AudioLowerVolume"  = { action = "spawn noctalia msg volume-down", allow_when_locked = true }
+"XF86AudioMute"         = { action = "spawn noctalia msg volume-mute", allow_when_locked = true }
+"XF86MonBrightnessUp"   = { action = "spawn noctalia msg brightness-up", allow_when_locked = true }
+"XF86MonBrightnessDown" = { action = "spawn noctalia msg brightness-down", allow_when_locked = true }
+
+# ------------- Screenshots & Screen Recording --------------
+"Print"           = { action = "spawn noctalia msg screenshot-fullscreen", repeat = false }
+"Ctrl+Print"      = { action = "spawn noctalia msg screenshot-region", repeat = false }
+"Alt+Print"       = { action = "spawn noctalia msg screenshot-window", repeat = false }
+"Mod+Print" = { action = "spawn sh -c 'mkdir -p ~/Videos && notify-send \"Recording Started\" && gpu-screen-recorder -w eDP-1 -f 60 -k hevc_vulkan -c mp4 -bm qp -q very_high -a default_output -o ~/Videos/Recording_$(date +%s).mp4'", repeat = false }
+"Mod+Shift+Print" = { action = "spawn sh -c 'pkill -INT -f \"^gpu-screen-recorder\"; sleep 1; notify-send \"Recording Stopped\"'", repeat = false }
+
+# -------------- Overview, Scratchpad & Toggles -------------
+"Mod+D"       = { action = "overview-toggle", repeat = false }
+"Mod+Q"       = { action = "window-close", repeat = false }
+"Mod+V"       = "window-toggle-floating"
+"Mod+Shift+V" = "window-focus-switch-floating"
+"Mod+B"       = "column-toggle-tabbed"
+"Mod+P"       = "window-toggle-pinned"
+"Mod+N"       = "scratchpad-toggle terminal"
+"Mod+Shift+N" = "window-move-to-scratchpad terminal"
+"Mod+Ctrl+N" = "window-restore-from-scratchpad terminal"
+
+# ------- Layout Mode Switching (Umbriel Feature) -----------
+"Mod+F1" = "workspace-set-layout scrolling"
+"Mod+F2" = "workspace-set-layout dwindle"
+"Mod+F3" = "workspace-set-layout master"
+"Mod+F4" = "workspace-set-layout stacking"
+
+# -------------------- Window Focus -------------------------
+"Mod+Left"  = "window-focus-left"
+"Mod+Right" = "window-focus-right"
+"Mod+H"     = "window-focus-left"
+"Mod+L"     = "window-focus-right"
+"Mod+K"     = "window-focus-up"
+"Mod+J"     = "window-focus-down"
+"Mod+Home"  = "column-focus-first"
+"Mod+End"   = "column-focus-last"
+"Mod+Tab"   = "workspace-focus-last"
+
+# ------------------- Window Movement -----------------------
+"Mod+Alt+Left"  = "column-move-left"
+"Mod+Alt+Right" = "column-move-right"
+"Mod+Alt+H"     = "column-move-left"
+"Mod+Alt+L"     = "column-move-right"
+"Mod+Alt+K"     = "window-move-up"
+"Mod+Alt+J"     = "window-move-down"
+"Mod+Ctrl+Home" = "column-move-to-first"
+"Mod+Ctrl+End"  = "column-move-to-last"
+
+# ------------ Window Consumption / Expulsion ---------------
+"Mod+BracketLeft"  = "window-consume-or-expel-left"
+"Mod+BracketRight" = "window-consume-or-expel-right"
+"Mod+Comma"        = "window-consume-from-right"
+"Mod+Period"       = "window-consume-right"
+
+# ------------------ Sizing & Resizing ----------------------
+"Mod+R"            = "window-cycle-primary-extent"
+"Mod+Shift+R"      = "window-cycle-primary-extent-back"
+"Mod+Ctrl+Shift+R" = "window-cycle-secondary-extent"
+"Mod+F"            = "window-toggle-maximize"
+"Mod+Shift+F"      = "window-toggle-fullscreen"
+"Mod+M"            = "window-toggle-maximize-to-edges"
+"Mod+C"            = "column-center"
+"Mod+Minus"        = "window-modify-primary-extent -0.05"
+"Mod+Equal"        = "window-modify-primary-extent +0.05"
+"Mod+Shift+Minus"  = "window-modify-secondary-extent -0.05"
+"Mod+Shift+Equal"  = "window-modify-secondary-extent +0.05"
+
+# --------------- Monitor Focus & Movement ------------------
+"Mod+Shift+Left"  = "output-focus-left"
+"Mod+Shift+Right" = "output-focus-right"
+"Mod+Shift+Up"    = "output-focus-up"
+"Mod+Shift+Down"  = "output-focus-down"
+"Mod+Shift+H"     = "output-focus-left"
+"Mod+Shift+L"     = "output-focus-right"
+"Mod+Shift+K"     = "output-focus-up"
+"Mod+Shift+J"     = "output-focus-down"
+
+"Mod+Shift+Ctrl+Left"  = "column-move-to-output-left"
+"Mod+Shift+Ctrl+Right" = "column-move-to-output-right"
+"Mod+Shift+Ctrl+Up"    = "column-move-to-output-up"
+"Mod+Shift+Ctrl+Down"  = "column-move-to-output-down"
+"Mod+Shift+Ctrl+H"     = "column-move-to-output-left"
+"Mod+Shift+Ctrl+L"     = "column-move-to-output-right"
+"Mod+Shift+Ctrl+K"     = "column-move-to-output-up"
+"Mod+Shift+Ctrl+J"     = "column-move-to-output-down"
+
+# ------------- Workspace Focus & Movement ------------------
+"Mod+Down"            = "workspace-next"
+"Mod+Up"              = "workspace-previous"
+"Mod+U"               = "workspace-next"
+"Mod+I"               = "workspace-previous"
+"Mod+Shift+Page_Down" = "workspace-move-down"
+"Mod+Shift+Page_Up"   = "workspace-move-up"
+"Mod+Shift+U"         = "workspace-move-down"
+"Mod+Shift+I"         = "workspace-move-up"
+"Mod+Alt+Down"        = "column-move-to-workspace-next"
+"Mod+Alt+Up"          = "column-move-to-workspace-previous"
+"Mod+Ctrl+U"          = "column-move-to-workspace-next"
+"Mod+Ctrl+I"          = "column-move-to-workspace-previous"
+
+# ---------------- Numbered Workspaces ----------------------
+"Mod+1" = "workspace-switch 1"
+"Mod+2" = "workspace-switch 2"
+"Mod+3" = "workspace-switch 3"
+"Mod+4" = "workspace-switch 4"
+"Mod+5" = "workspace-switch 5"
+"Mod+6" = "workspace-switch 6"
+"Mod+7" = "workspace-switch 7"
+"Mod+8" = "workspace-switch 8"
+"Mod+9" = "workspace-switch 9"
+
+"Mod+Ctrl+1" = "column-move-to-workspace 1"
+"Mod+Ctrl+2" = "column-move-to-workspace 2"
+"Mod+Ctrl+3" = "column-move-to-workspace 3"
+"Mod+Ctrl+4" = "column-move-to-workspace 4"
+"Mod+Ctrl+5" = "column-move-to-workspace 5"
+"Mod+Ctrl+6" = "column-move-to-workspace 6"
+"Mod+Ctrl+7" = "column-move-to-workspace 7"
+"Mod+Ctrl+8" = "column-move-to-workspace 8"
+"Mod+Ctrl+9" = "column-move-to-workspace 9"
+
+# ------------- Mouse & Touchpad Scrolling ------------------
+"Mod+WheelDown"            = { action = "workspace-next", cooldown_ms = 150 }
+"Mod+WheelUp"              = { action = "workspace-previous", cooldown_ms = 150 }
+"Mod+Ctrl+WheelDown"       = { action = "column-move-to-workspace-next", cooldown_ms = 150 }
+"Mod+Ctrl+WheelUp"         = { action = "column-move-to-workspace-previous", cooldown_ms = 150 }
+
+"Mod+WheelRight"           = "window-focus-right"
+"Mod+WheelLeft"            = "window-focus-left"
+"Mod+Ctrl+WheelRight"      = "column-move-right"
+"Mod+Ctrl+WheelLeft"       = "column-move-left"
+
+"Mod+Shift+WheelDown"      = "window-focus-right"
+"Mod+Shift+WheelUp"        = "window-focus-left"
+"Mod+Ctrl+Shift+WheelDown" = "column-move-right"
+"Mod+Ctrl+Shift+WheelUp"   = "column-move-left"
