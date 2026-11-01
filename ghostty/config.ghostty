@@ -1,17 +1,16 @@
-window-decoration = false
-gtk-titlebar = false
+window-decoration = none
 confirm-close-surface = false
 
 window-padding-x = 20
 window-padding-y = 15
 window-padding-color = extend
-unfocused-split-opacity = 0.
+window-padding-balance = true
 
 app-notifications = false
 theme = noctalia
 background-opacity = 0.4
-custom-shader = shaders/cursor.glsl
 custom-shader-animation = always
+#custom-shader = ~/.config/ghostty/shaders/WIP.glsl
 
 font-size = 10
 font-family = "JetbrainsMono Nerd Font"
@@ -21,11 +20,12 @@ font-feature = liga
 scrollback-limit = 5000
 scrollbar = never
 cursor-style = bar
+#cursor-style-unfocused = bar
 cursor-style-blink = true
 cursor-click-to-move = true
 
-window-save-state = never
 gtk-single-instance = true
 shell-integration = fish
 mouse-hide-while-typing = true
 copy-on-select = false
+unfocused-split-opacity = 1.0
