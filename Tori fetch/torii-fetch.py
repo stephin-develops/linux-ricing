@@ -10,7 +10,7 @@ import getpass, json, os, re, socket, subprocess, sys, tempfile, unicodedata
 HERE = os.path.dirname(os.path.abspath("tori"))
 
 # ---- things you may want to tweak ------------------------------------------------
-IMAGE      = os.path.join(HERE, "p81.png") # your image name
+IMAGE      = os.path.join(HERE, "pi1.png") # your image name
 LOGO_TYPE  = "kitty-direct"      # or kitty-direct / sixel / iterm / chafa
 IMG_COLS   = 36          # image width in terminal cells
 IMG_ROWS   = 24          # 36 cols x 24 rows ~ 3:4, matches a 1200x1600 image
