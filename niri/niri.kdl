@@ -1,1 +1,375 @@
+//
+//            $$\                      $$\      $$\
+//            $$ |                     $$ |     \__|
+//  $$$$$$$\$$$$$$\   $$$$$$\  $$$$$$\ $$$$$$$\ $$\$$$$$$$\
+// $$  _____\_$$  _| $$  __$$\$$  __$$\$$  __$$\$$ $$  __$$\
+// \$$$$$$\   $$ |   $$$$$$$$ $$ /  $$ $$ |  $$ $$ $$ |  $$ |
+//  \____$$\  $$ |$$\$$   ____$$ |  $$ $$ |  $$ $$ $$ |  $$ |
+// $$$$$$$  | \$$$$  \$$$$$$$\$$$$$$$  $$ |  $$ $$ $$ |  $$ |
+// \_______/   \____/ \_______$$  ____/\__|  \__\__\__|  \__|
+//                            $$ |
+//                            $$ |
+//                            \__|
+//          $$\         $$\                                   $$$$$$\
+//          \__|        \__|                                 $$  __$$\
+// $$$$$$$\ $$\ $$$$$$\ $$\        $$$$$$$\ $$$$$$\ $$$$$$$\ $$ /  \__|
+// $$  __$$\$$ $$  __$$\$$ |      $$  _____$$  __$$\$$  __$$\$$$$\
+// $$ |  $$ $$ $$ |  \__$$ |      $$ /     $$ /  $$ $$ |  $$ $$  _|
+// $$ |  $$ $$ $$ |     $$ |      $$ |     $$ |  $$ $$ |  $$ $$ |
+// $$ |  $$ $$ $$ |     $$ |      \$$$$$$$\\$$$$$$  $$ |  $$ $$ |
+// \__|  \__\__\__|     \__|       \_______|\______/\__|  \__\__|
+//
+//
 
+// ==============================================================
+//                          AUTOSTART
+// ==============================================================
+
+spawn-at-startup "noctalia"
+
+// ==============================================================
+//                           INPUT
+// ==============================================================
+
+input {
+    keyboard {
+        xkb {}
+        numlock
+    }
+    touchpad {
+        tap
+        natural-scroll
+        accel-speed 0.5
+        scroll-factor 2.0
+    }
+    mouse {
+        scroll-factor 2.0
+    }
+    trackpoint {}
+    focus-follows-mouse
+    workspace-auto-back-and-forth
+}
+
+// ==============================================================
+//                          OUTPUTS
+// ==============================================================
+
+output "eDP-1" {
+    mode "1920x1080@59.977"
+    scale 1
+    transform "normal"
+    position x=0 y=0
+}
+
+// ==============================================================
+//                     LAYOUT & APPEARANCE
+// ==============================================================
+
+layout {
+    gaps 20
+    center-focused-column "never"
+    background-color "transparent"
+
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+    }
+
+    focus-ring {
+        off
+        width 1
+        active-color "#7fc8ff"
+        inactive-color "transparent"
+    }
+
+    shadow {
+        off
+        softness 40
+        spread 0
+        offset x=0 y=8
+        color "#00000060"
+        inactive-color "#00000040"
+    }
+
+    struts {
+        //top 35
+        //bottom 32
+        //left 32
+        //right 32
+    }
+
+    always-center-single-column
+}
+
+
+// ==============================================================
+//                       EFFECTS & BLUR
+// ==============================================================
+
+layer-rule {
+    match namespace="^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"
+}
+
+layer-rule {
+    match namespace="noctalia-window-switcher"
+}
+
+window-rule {
+    match app-id="brave"
+    open-maximized true
+}
+
+window-rule {
+    match app-id="org.cutwire.Drift"
+    open-fullscreen true
+}
+
+// ==============================================================
+//                      WINDOW ANIMATIONS
+// ==============================================================
+
+include "animations.kdl"
+
+// ==============================================================
+//                    ENVIRONMENT VARIABLE
+// ==============================================================
+
+environment {
+    XDG_CURRENT_DESKTOP "niri"
+    QT_QPA_PLATFORM "wayland"
+    ELECTRON_OZONE_PLATFORM_HINT "auto"
+    QT_QPA_PLATFORMTHEME "qt6ct"
+}
+
+// ==============================================================
+//                    WINDOW & LAYER RULES
+// ==============================================================
+
+window-rule {
+    geometry-corner-radius 20
+    clip-to-geometry true
+    draw-border-with-background false
+}
+
+window-rule {
+    match app-id=r#"^org\.wezfurlong\.wezterm$"#
+    default-column-width {}
+}
+
+//-------------------- Noctalia UI Rules ------------------------
+
+layer-rule {
+  match namespace="^noctalia-wallpaper"
+  place-within-backdrop true
+}
+
+window-rule {
+    match app-id="dev.noctalia.Noctalia.Settings"
+    open-floating true
+    default-column-width { fixed 1080; }
+    default-window-height { fixed 920; }
+}
+
+//-------------------- App Specific Rules -----------------------
+
+window-rule {
+    match app-id="steam" title=r#"^notificationtoasts_\d+_desktop$"#
+    default-floating-position x=10 y=10 relative-to="bottom-right"
+}
+
+// ==============================================================
+//                        MISC SETTINGS
+// ==============================================================
+
+hotkey-overlay {
+    skip-at-startup
+}
+
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+debug {
+    render-drm-device "/dev/dri/renderD129"
+    ignore-drm-device "/dev/dri/renderD128"
+    honor-xdg-activation-with-invalid-serial
+}
+
+window-rule {
+    focus-ring {
+        inactive-color "transparent"
+    }
+    border {
+        inactive-color "transparent"
+    }
+}
+
+// ==============================================================
+//                         KEYBINDINGS
+// ==============================================================
+
+binds {
+
+    //------------------- Core Commands -------------------------
+
+    Mod+Shift+Slash { show-hotkey-overlay; }
+    Mod+Shift+E     { quit; }
+    Ctrl+Alt+Delete { quit; }
+    //Mod+Shift+P     { power-off-monitors; }
+    Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+
+    //------------------ Launcher & Apps ------------------------
+
+    Mod+T { spawn-sh "ghostty"; }
+    Mod+Space { spawn-sh "noctalia msg panel-toggle launcher"; }
+    Mod+S { spawn-sh "noctalia msg panel-toggle control-center"; }
+
+    //---------------- Volume & Brightness ----------------------
+
+    XF86AudioRaiseVolume { spawn-sh "noctalia msg volume-up"; }
+    XF86AudioLowerVolume { spawn-sh "noctalia msg volume-down"; }
+    XF86AudioMute { spawn-sh "noctalia msg volume-mute"; }
+    XF86MonBrightnessUp { spawn-sh "noctalia msg brightness-up"; }
+    XF86MonBrightnessDown { spawn-sh "noctalia msg brightness-down"; }
+
+    //-------------------- Screenshots --------------------------
+
+    Print      { screenshot; }
+    Ctrl+Print { screenshot-screen; }
+    Alt+Print  { screenshot-window; }
+
+    //Start a standard screen recording with desktop audio
+    Mod+Print {
+        spawn-sh "gpu-screen-recorder -w portal -f 60 -a default_output -o ~/Videos/Recording_$(date +%s).mp4"
+    }
+    //Stop the standard recording gracefully
+    Mod+Shift+Print {
+        spawn-sh "killall -SIGINT gpu-screen-recorder && notify-send 'Recording Saved'"
+    }
+
+    //-------------- Overview & Layout Toggles ------------------
+
+    Mod+D       repeat=false { toggle-overview; }
+    Mod+Q       repeat=false { close-window; }
+    Mod+V                    { toggle-window-floating; }
+    Mod+Shift+V              { switch-focus-between-floating-and-tiling; }
+    Mod+B                    { toggle-column-tabbed-display; }
+
+    //-------------------- Window Focus -------------------------
+
+    Mod+Left  { focus-column-left; }
+    Mod+Right { focus-column-right; }
+    Mod+H     { focus-column-left; }
+    Mod+L     { focus-column-right; }
+    Mod+K     { focus-window-up; }
+    Mod+J     { focus-window-down; }
+    Mod+Home  { focus-column-first; }
+    Mod+End   { focus-column-last; }
+
+    //------------------- Window Movement -----------------------
+
+    Mod+Alt+Left  { move-column-left; }
+    Mod+Alt+Right { move-column-right; }
+    Mod+Alt+H     { move-column-left; }
+    Mod+Alt+L     { move-column-right; }
+    Mod+Alt+K     { move-window-up; }
+    Mod+Alt+J     { move-window-down; }
+    Mod+Ctrl+Home { move-column-to-first; }
+    Mod+Ctrl+End  { move-column-to-last; }
+
+    //------------ Window Consumption/Expulsion -----------------
+
+    Mod+BracketLeft  { consume-or-expel-window-left; }
+    Mod+BracketRight { consume-or-expel-window-right; }
+    Mod+Comma        { consume-window-into-column; }
+    Mod+Period       { expel-window-from-column; }
+
+    //------------------ Sizing & Resizing ----------------------
+
+    Mod+R            { switch-preset-column-width; }
+    Mod+Shift+R      { switch-preset-column-width-back; }
+    Mod+Ctrl+Shift+R { switch-preset-window-height; }
+    Mod+Ctrl+R       { reset-window-height; }
+    Mod+F            { maximize-column; }
+    Mod+Shift+F      { fullscreen-window; }
+    Mod+M            { maximize-window-to-edges; }
+    Mod+Ctrl+F       { expand-column-to-available-width; }
+    Mod+C            { center-column; }
+    Mod+Ctrl+C       { center-visible-columns; }
+    Mod+Minus        { set-column-width "-5%"; }
+    Mod+Equal        { set-column-width "+5%"; }
+    Mod+Shift+Minus  { set-window-height "-5%"; }
+    Mod+Shift+Equal  { set-window-height "+5%"; }
+
+    //--------------- Monitor Focus & Movement ------------------
+
+    Mod+Shift+Left  { focus-monitor-left; }
+    Mod+Shift+Right { focus-monitor-right; }
+    Mod+Shift+Up    { focus-monitor-up; }
+    Mod+Shift+Down  { focus-monitor-down; }
+    Mod+Shift+H     { focus-monitor-left; }
+    Mod+Shift+L     { focus-monitor-right; }
+    Mod+Shift+K     { focus-monitor-up; }
+    Mod+Shift+J     { focus-monitor-down; }
+
+    Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
+    Mod+Shift+Ctrl+Right { move-column-to-monitor-right; }
+    Mod+Shift+Ctrl+Up    { move-column-to-monitor-up; }
+    Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }
+    Mod+Shift+Ctrl+H     { move-column-to-monitor-left; }
+    Mod+Shift+Ctrl+L     { move-column-to-monitor-right; }
+    Mod+Shift+Ctrl+K     { move-column-to-monitor-up; }
+    Mod+Shift+Ctrl+J     { move-column-to-monitor-down; }
+
+    //------------- Workspace Focus & Movement ------------------
+
+    Mod+Down            { focus-workspace-down; }
+    Mod+Up              { focus-workspace-up; }
+    Mod+U               { focus-workspace-down; }
+    Mod+I               { focus-workspace-up; }
+    Mod+Shift+Page_Down { move-workspace-down; }
+    Mod+Shift+Page_Up   { move-workspace-up; }
+    Mod+Shift+U         { move-workspace-down; }
+    Mod+Shift+I         { move-workspace-up; }
+    Mod+Alt+Down        { move-column-to-workspace-down; }
+    Mod+Alt+Up          { move-column-to-workspace-up; }
+    Mod+Ctrl+U          { move-column-to-workspace-down; }
+    Mod+Ctrl+I          { move-column-to-workspace-up; }
+
+    //---------------- Numbered Workspaces ----------------------
+
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+
+    Mod+Ctrl+1 { move-column-to-workspace 1; }
+    Mod+Ctrl+2 { move-column-to-workspace 2; }
+    Mod+Ctrl+3 { move-column-to-workspace 3; }
+    Mod+Ctrl+4 { move-column-to-workspace 4; }
+    Mod+Ctrl+5 { move-column-to-workspace 5; }
+    Mod+Ctrl+6 { move-column-to-workspace 6; }
+    Mod+Ctrl+7 { move-column-to-workspace 7; }
+    Mod+Ctrl+8 { move-column-to-workspace 8; }
+    Mod+Ctrl+9 { move-column-to-workspace 9; }
+
+    //------------- Mouse & Touchpad Scrolling ------------------
+
+    Mod+WheelScrollDown            cooldown-ms=150 { focus-workspace-down; }
+    Mod+WheelScrollUp              cooldown-ms=150 { focus-workspace-up; }
+    Mod+Ctrl+WheelScrollDown       cooldown-ms=150 { move-column-to-workspace-down; }
+    Mod+Ctrl+WheelScrollUp         cooldown-ms=150 { move-column-to-workspace-up; }
+
+    Mod+WheelScrollRight           { focus-column-right; }
+    Mod+WheelScrollLeft            { focus-column-left; }
+    Mod+Ctrl+WheelScrollRight      { move-column-right; }
+    Mod+Ctrl+WheelScrollLeft       { move-column-left; }
+
+    Mod+Shift+WheelScrollDown      { focus-column-right; }
+    Mod+Shift+WheelScrollUp        { focus-column-left; }
+    Mod+Ctrl+Shift+WheelScrollDown { move-column-right; }
+    Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
+}
